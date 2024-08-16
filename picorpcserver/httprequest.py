@@ -6,7 +6,6 @@ It can verifiably stand on its own if needed.
 import socket
 from .netmgr import NetMgr
 class HTTPRequest:
-    
     raw_msg = ""
     hsock = None
     nmgr = None
@@ -16,7 +15,7 @@ class HTTPRequest:
     method = ""
     uri = ""
     protocol = ""
-    
+
     def __init__(self,nm,sock):
         """
         Initializes the http server, it requires the following parameters
@@ -30,25 +29,25 @@ class HTTPRequest:
             print("HTTPRequest::__init__")
         self.raw_msg = nm.read_all(sock)
         self._parse()
-        
+
     def socket(self):
         """
         Returns the listening socket used to create this object
         """
         return self.hsock
-    
+
     def net_manager(self):
         """
         Returns the connected NetMgr object used to construct the object
         """
         return self.nmgr
-    
+
     def raw_message(self):
         """
         Returns the raw message read from the socket to process
         """
         return self.raw_msg
-    
+
     def _parse(self):
         """
         Parses the message filling in the method, url, headers, and raw message sent.
@@ -79,7 +78,7 @@ class HTTPRequest:
         if self.verbose:
             print(self.headers)
         return True
-        
+
     def method(self):
         """
         The method used for this request, usually POST or GET
@@ -103,14 +102,14 @@ class HTTPRequest:
         The raw data sent after the headers. Will be blank if its a get request
         """
         return self.payload
-    
+
     def headerval(self,key):
         """
         Returns a case insensitive match for a header and retrieve its value
         """
         if self.verbose:
             print(f"HTTPRequest::headerval ({key})")
-        
+
         cmpkey = key.lower()
         for k in self.headers:
             if k.lower() == cmpkey:

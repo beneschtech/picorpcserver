@@ -1,12 +1,16 @@
-import network
+"""
+The network manager class, manages reads/writes/connections, etc..
+It supports static addresses and dhcp, but only supports ipv4
+That is due to the underlying micropython methods
+"""
 import socket
 from time import sleep
 import machine
+import network
 
 WIFI_TIMEOUT = 10
 
 class NetMgr:
-    
     led = None
     wlan = None
     ssid = ""
@@ -15,7 +19,7 @@ class NetMgr:
     connection = None
     PAGE_SIZE = 4096
     verbose = False    
-    
+
     def __init__(self,ssid,passwd,ifconfig=None,verbose=False):
         self.ssid = ssid
         self.passw = passwd
@@ -30,17 +34,17 @@ class NetMgr:
         self.wlan.connect(ssid,passwd)
         if verbose:
             print("NetMgr::__init__")
-            
+
     def __del__(self):
         if verbose:
             print("NetMgr::__del__")        
         self.connection.close()
         self.wlan.disconnect()
         self.led.off()
-        
+
     def is_connected(self):
         return self.wlan.isconnected()
-    
+
     def if_config(self):
         return self.wlan.ifconfig()
 
@@ -64,7 +68,7 @@ class NetMgr:
                 self.net_fail()
                 
         return self.wlan.isconnected()
-                
+
     def bind_to_port(self,port):
         if self.verbose:
             print(f"NetMgr::bind_to_port({port})")
@@ -94,7 +98,7 @@ class NetMgr:
         if self.verbose:
             print(f"NetMgr::next_request Connection from {acc[1]}")
         return acc[0]
-    
+
     def read_all(self,sock):
         rv = ""
         inbytes = sock.recv(NetMgr.PAGE_SIZE)
@@ -105,7 +109,7 @@ class NetMgr:
         if self.verbose:
             print(f"NetMgr::read_all Read {len(rv)} bytes")
         return rv
-    
+
     def read(self,sock,sz):
         if sz == -1:
             return self.read_all(sock)
@@ -118,7 +122,7 @@ class NetMgr:
         if self.verbose:
             print(f"NetMgr::read Read {len(rv)} bytes")
         return rv
-            
+
     def write(self,sock: socket.socket,data: bytes):
         sz = len(data)
         sent = sock.write(data)
@@ -127,7 +131,7 @@ class NetMgr:
         if self.verbose:
             print(f"NetMgr::write Wrote {sent} bytes")
         return sent
-        
+
     def close(self):
         if self.verbose:
             print("NetMgr::close")
@@ -136,7 +140,7 @@ class NetMgr:
             self.connection = None
         self.wlan.disconnect()
         self.led.off()
-        
+
     def net_fail(self):
       while ( 1 == 1 ):
         sleep(0.25)
