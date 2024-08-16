@@ -51,7 +51,7 @@ def stop():
     global _GNETMGR
     _GNETMGR.close()
     _GNETMGR = None
-    
+
 def stop_listening():
     """
     Stops the listening loop ands returns from the run() function after
@@ -59,7 +59,7 @@ def stop_listening():
     """
     global _GKEEPLISTENING
     _GKEEPLISTENING = False
-    
+
 def set_verbose(v):
     """
     Sets the verbose flag and allows you to see internals of the program
@@ -67,7 +67,7 @@ def set_verbose(v):
     """
     global _GVERBOSEFLAG
     _GVERBOSEFLAG = v
-    
+
 def map_function(method,func):
     """
     Maps a method string to a function written to accept and return
@@ -78,8 +78,11 @@ def map_function(method,func):
         return retval
     """
     global _GFUNCMAP
-    _GFUNCMAP[method] = func
-    
+    if _GFUNCMAP is None:
+        _GFUNCMAP = {method: func}
+    else:
+        _GFUNCMAP[method] = func
+
 def set_listen_port(l):
     """
     Sets the TCP port to listen on must be called before run()
@@ -87,8 +90,8 @@ def set_listen_port(l):
     """
     global _GLISTENPORT
     _GLISTENPORT = int(l)
-    
-def _listenForMessages():
+
+def __listen_for_messages():
     """
     Private function that determines whether to keep running the listen
     loop. It checks whether the application has requested to stop
@@ -118,15 +121,15 @@ def run():
     global _GFUNCMAP
     global _GLISTENPORT
     global _GVERBOSEFLAG
-    
+
     try:
         _GNETMGR.bind_to_port(_GLISTENPORT)
     except Exception as e:
         print(e)
         _GNETMGR.close()
         return
-    
-    while _listenForMessages():
+
+    while __listen_for_messages():
         hreq = HTTPRequest(_GNETMGR,_GNETMGR.next_request())
         jreq=None
         try:
@@ -162,4 +165,3 @@ def run():
             resp.fromException(je)
             resp.send(hreq)
             continue
-        
