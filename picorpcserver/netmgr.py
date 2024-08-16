@@ -18,7 +18,7 @@ class NetMgr:
     ifcfg = None
     connection = None
     PAGE_SIZE = 4096
-    verbose = False    
+    verbose = False
 
     def __init__(self,ssid,passwd,ifconfig=None,verbose=False):
         self.ssid = ssid
@@ -30,14 +30,14 @@ class NetMgr:
         self.wlan.active(True)
         self.led.off()
         if ifconfig is not None:
-            self.wlan.ifconfig(ifconfig)            
+            self.wlan.ifconfig(ifconfig)
         self.wlan.connect(ssid,passwd)
         if verbose:
             print("NetMgr::__init__")
 
     def __del__(self):
         if verbose:
-            print("NetMgr::__del__")        
+            print("NetMgr::__del__")
         self.connection.close()
         self.wlan.disconnect()
         self.led.off()
@@ -59,20 +59,20 @@ class NetMgr:
             if self.wlan.isconnected():
                 print("NetMgr::wait_for_connected Connected To Network")
                 ic = self.wlan.ifconfig()
-                print(f"  IP Address: {ic[0]}");
-                print(f"  Netmask: {ic[1]}");
-                print(f"  Gateway: {ic[2]}");
-                print(f"  Nameserver(s): {ic[3]}");
+                print(f"  IP Address: {ic[0]}")
+                print(f"  Netmask: {ic[1]}")
+                print(f"  Gateway: {ic[2]}")
+                print(f"  Nameserver(s): {ic[3]}")
             else:
                 print("NetMgr::wait_for_connected Connection failed "+str(self.wlan.status()))
                 self.net_fail()
-                
+ 
         return self.wlan.isconnected()
 
     def bind_to_port(self,port):
         if self.verbose:
             print(f"NetMgr::bind_to_port({port})")
-        #address = (self.wlan.ifconfig()[0], port)
+
         address = ('', port)
         self.connection = socket.socket()
         self.connection.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -88,7 +88,7 @@ class NetMgr:
                 break
         if attempt >= 9:
             self.net_fail()
-        self.connection.listen(1)        
+        self.connection.listen(1)
         return self.connection
 
     def next_request(self):
@@ -142,7 +142,6 @@ class NetMgr:
         self.led.off()
 
     def net_fail(self):
-      while ( 1 == 1 ):
+      while ( True ):
         sleep(0.25)
         self.led.toggle()
-        

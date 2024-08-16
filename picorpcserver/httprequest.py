@@ -58,12 +58,12 @@ class HTTPRequest:
             offst = self.raw_msg.find("\r\n\r\n")
             hdr = self.raw_msg[:offst]
             self.payload = self.raw_msg[offst+4:]
-            hdrs = hdr.split("\r\n")        
-            protocolh = hdrs[0]        
+            hdrs = hdr.split("\r\n")
+            protocolh = hdrs[0]
             for hdrt in hdrs[1:]:
                 hdrta = hdrt.split(':')
                 key = hdrta[0].strip()
-                val = hdrta[1].strip()            
+                val = hdrta[1].strip()
                 self.headers[key.lower()] = val
             parr = protocolh.split()
             if len(parr) != 3:
@@ -115,5 +115,5 @@ class HTTPRequest:
             if k.lower() == cmpkey:
                 return self.headers[k]
         if self.verbose:
-            print(f"HTTPRequest::headerval {key} not found")    
+            print(f"HTTPRequest::headerval {key} not found")
         return None

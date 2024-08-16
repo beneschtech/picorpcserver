@@ -1,7 +1,11 @@
+"""
+This class is a one shot class that wraps raw data and a code
+and special headers if set into a valid HTTP response
+"""
 class HTTPResponse:
     net = None
     sock = None
-    code = 200    
+    code = 200
     _hlines = {
         200: "OK",
         403: "Unauthorized",
@@ -15,7 +19,7 @@ class HTTPResponse:
     def __init__(self,htreq):
         self.net = htreq.nmgr
         self.sock = htreq.hsock
-        
+
     def send(self,code,payload):
         rv = f"HTTP/1.1 {code} {self._hlines[code]}\r\n"
         for k in self.headers:
@@ -25,5 +29,5 @@ class HTTPResponse:
         rv += f"Content-Length: {len(payload)}\r\n"
         rv += "\r\n"
         rv += payload
-        self.net.write(self.sock,rv.encode())        
+        self.net.write(self.sock,rv.encode())
     
