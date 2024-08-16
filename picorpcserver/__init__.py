@@ -142,9 +142,9 @@ def run():
             continue
         method = jreq.method
         if method not in _GFUNCMAP:
-            jex = JsonRpcException(-32601,method,jreq.id)
+            jex = JsonRPCException(-32601,method,jreq.id)
             resp = JSONRPCResponse(jreq)
-            resp.fromException(je)
+            resp.fromException(jex)
             resp.send(hreq)
             continue
         try:
@@ -162,6 +162,6 @@ def run():
             print(f"Exception caught! {str(e)}")
             ex = JsonRPCSystemError(e)
             resp = JSONRPCResponse(jreq)
-            resp.fromException(je)
+            resp.fromException(ex)
             resp.send(hreq)
             continue
