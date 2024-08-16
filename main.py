@@ -1,5 +1,7 @@
 # We have a sleep later on, so we need time
 import time
+# And an exit
+import sys
 
 # In addition to the classes inside here, you can use the picorpcserver
 # import itself as a wrapper around the classes inside, the end goal
@@ -27,17 +29,18 @@ def rpc_ping(v):
 # This function actually stops the netowrk loop, and shows one of the functions
 # exposed by the back end.
 def rpc_exit(v):
+    del v
     picorpcserver.stop_listening()
     return "Stopping"
 
 # This makes sure that the value passed in is a list of numbers
 # and adds them all up, otherwise returns 0
-def rpc_add(v):    
+def rpc_add(v):
     if str(type(v)) != "<class 'list'>":
-      return 0
+        return 0
     rv = 0
     for val in v:
-      rv += val
+        rv += val
     return rv
 
 # By setting verbose, you see most of the internals of the communication
@@ -49,7 +52,7 @@ picorpcserver.set_verbose(True)
 # otherwise, it uses DHCP after authenticating with your network
 if not picorpcserver.init(WIFI_SSID,WIFI_PASSWD):
     print("Network init failed!")
-    exit(1)
+    sys.exit(1)
 
 # Bind a few of our functions, the format is "method",function
 # there is no reason these cant be functions inside a package
