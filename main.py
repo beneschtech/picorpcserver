@@ -1,3 +1,8 @@
+"""
+This is an example usage of the picorpcserver module, it shows
+network init, mapping functions, and how to properly
+set up run and exit from it
+"""
 # We have a sleep later on, so we need time
 import time
 # And an exit
@@ -24,11 +29,21 @@ WIFI_IFCONFIG = ("172.16.5.2","255.255.0.0","172.16.0.1","172.16.2.1")
 # after all this is a little microcontroller running python, if you need
 # security and tokens and all that, get a full fledged pi and do this in C++
 def rpc_ping(v):
+    """
+    This  is a simple example function, which just returns a string with the
+    inout data converted to string format. Functions like this are
+    used to ensure connectivity and readiness of the system
+    for future use by another control system.
+    """
     return f"Pong {v}!!"
 
 # This function actually stops the netowrk loop, and shows one of the functions
 # exposed by the back end.
 def rpc_exit(v):
+    """
+    This example function exits the listen loop. Using the function
+    inside the module ensures that it exits cleanly
+    """
     del v
     picorpcserver.stop_listening()
     return "Stopping"
@@ -36,6 +51,10 @@ def rpc_exit(v):
 # This makes sure that the value passed in is a list of numbers
 # and adds them all up, otherwise returns 0
 def rpc_add(v):
+    """
+    This example function takes a list of numbers and adds them 
+    together to return the result as an integer.
+    """
     if str(type(v)) != "<class 'list'>":
         return 0
     rv = 0
@@ -67,7 +86,7 @@ picorpcserver.set_listen_port(80)
 # Initiates the run loop, it will continue until either
 # it is explicitly stopped as above, or some kind of major
 # exception occurs that it cant deal with.  Hopefully not
-# the latter, but if it does, please let me know so we can 
+# the latter, but if it does, please let me know so we can
 # adress it
 picorpcserver.run()
 
