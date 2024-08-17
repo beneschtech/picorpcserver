@@ -14,10 +14,10 @@ import sys
 import picorpcserver
 
 # Your Wifi parameters go here
-WIFI_SSID = "MyWifiSSID"
-WIFI_PASSWD = "MyWifiPassword"
+WIFI_SSID = "YourWifiSSID"
+WIFI_PASSWD = "YourSecretPassword"
 
-# In addition to implement a statis address, specify this array
+# In addition to implement a static address, specify this array
 # Desired address, netmask, gateway, and nameserver in that order.
 WIFI_IFCONFIG = ("172.16.5.2","255.255.0.0","172.16.0.1","172.16.2.1")
 
@@ -55,6 +55,8 @@ def rpc_add(v):
     This example function takes a list of numbers and adds them 
     together to return the result as an integer.
     """
+    print(f"Recieved value type of {str(type(v))} ({str(v)})")
+    
     if str(type(v)) != "<class 'list'>":
         return 0
     rv = 0
@@ -69,7 +71,7 @@ picorpcserver.set_verbose(True)
 # Initial startup, which connects to your wifi. Passing in something like
 # the ifconfig list above as a 3rd parameter will give you a static IP
 # otherwise, it uses DHCP after authenticating with your network
-if not picorpcserver.init(WIFI_SSID,WIFI_PASSWD):
+if not picorpcserver.init(WIFI_SSID,WIFI_PASSWD,WIFI_IFCONFIG):
     print("Network init failed!")
     sys.exit(1)
 

@@ -130,7 +130,13 @@ def run():
         return
 
     while __listen_for_messages():
-        hreq = HTTPRequest(_GNETMGR,_GNETMGR.next_request())
+        try:
+            hreq = HTTPRequest(_GNETMGR,_GNETMGR.next_request())
+        except Exception as e:
+            print(f"Exception occured while getting next request! {str(e)}")
+            _GKEEPLISTENING = False
+            continue
+
         jreq=None
         try:
             jreq = JSONRpcRequest(hreq,_GVERBOSEFLAG)

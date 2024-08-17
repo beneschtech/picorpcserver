@@ -21,6 +21,12 @@ class HTTPResponse:
         self.sock = htreq.hsock
 
     def send(self,code,payload):
+        """
+        This sends the request on the socket obtained from the constructor
+        it closes the connection at the end because we cant support requests
+        that are based on saved connections without signifacantly more
+        code. We are running on a microcontroller after all...
+        """
         rv = f"HTTP/1.1 {code} {self._hlines[code]}\r\n"
         for k in self.headers:
             if k.lower() == "content-length".lower():
@@ -30,4 +36,4 @@ class HTTPResponse:
         rv += "\r\n"
         rv += payload
         self.net.write(self.sock,rv.encode())
-    
+        self.sock.close()
